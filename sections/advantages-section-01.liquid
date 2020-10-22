@@ -1,0 +1,87 @@
+{% if section.settings.show_section %}
+  <section class="section">
+    <div class="container container--narrow custom-content--centered">
+      {%- if section.settings.title_1 != blank -%}
+        <h2 class="h0">
+          {{ section.settings.title_1 }}
+        </h2>
+      {%- endif -%}
+      {%- if section.settings.image_1 != blank -%}
+        <img src="{{ section.settings.image_1 | img_url: 'master' }}" alt="{{ section.settings.title_1 | strip_html }}">
+      {%- endif -%}
+    </div>
+  </section>
+
+  <section class="pdp-advantages">
+    <div class="container container--medium">
+      <div class="pdp-advantages--row">
+        <div class="pdp-advantages--left">
+          {%- if section.settings.image_2 != blank -%}
+            <div class="pdp-advantages--left-lines">
+              <div class="pdp-advantages--left-lines-door door-top--top-right"></div>
+            </div>
+            <img src="{{ section.settings.image_2 | img_url: 'master' }}" alt="{{ section.settings.title_2 | strip_html }}">
+          {%- endif -%}
+        </div>
+        <div class="pdp-advantages--right">
+          {%- if section.settings.title_2 != blank -%}
+            <h2 class="h0">
+              {{ section.settings.title_2 }}
+            </h2>
+          {%- endif -%}
+          {%- if section.settings.text_2 != blank -%}
+            {{ section.settings.text_2 }}
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {%- if section.settings.image_3 != blank -%}
+    <img class="w-100" src="{{ section.settings.image_3 | img_url: 'master' }}" alt="Advantages image">
+  {%- endif -%}
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product advantages",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_section",
+      "label": "Show section",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "title_1",
+      "label": "Title 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Image 1"
+    },
+    {
+      "type": "text",
+      "id": "title_2",
+      "label": "Title 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Image 2"
+    },
+    {
+      "type": "textarea",
+      "id": "text_2",
+      "label": "Text 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_3",
+      "label": "Image 3 (full width)"
+    }
+  ]
+}
+{% endschema %}

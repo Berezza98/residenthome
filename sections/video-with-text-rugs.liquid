@@ -1,0 +1,104 @@
+{% if section.settings.show_section %}
+  <section class="sec--video-with-text mod-1 mod-rugs" data-section-id="{{ section.id }}" data-section-type="video-with-text">
+    <div class="sec--video-with-text-figure-1">
+      <div class="sec--video-with-text-figure-1-door door-right--bottom-right"></div>
+    </div>
+    <div class="container">
+      <div class="video-with-text">
+        <div class="video-with-text__image-container">
+          {%- if section.settings.video != blank -%}
+            <div class="aspect-ratio aspect-ratio--video">
+              {{ section.settings.video }}
+            </div>
+          {%- endif -%}
+          {%- if section.settings.image != blank -%}
+            <img class="w-100" src="{{ section.settings.image | img_url: 'master' }}" alt="Video section image">
+          {%- endif -%}
+          {%- if section.settings.image == blank and section.settings.video == blank -%}
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </div>
+
+        <div class="video-with-text__text-container">
+          <div class="video-with-text__text-aligner">
+            {%- if section.settings.title != blank -%}
+              <h2 class="heading h2">{{ section.settings.title }}</h2>
+            {%- endif -%}
+
+            <div class="rte">
+              {{ section.settings.content }}
+
+              {%- if section.settings.author != blank -%}
+                <div class="video-with-text__text-author w-100"><b>{{ section.settings.author }}</b></div>
+              {%- endif -%}
+              {%- if section.settings.button_link != blank and section.settings.button_text != blank -%}
+                <a href="{{ section.settings.button_link }}" class="video-with-text__text-btn button button--primary">{{ section.settings.button_text | escape }}</a>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Video with text",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_section",
+      "label": "Show section",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "video",
+      "label": "Video embed code",
+      "info": "Vimeo recommended"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Your title"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Text",
+      "default": "<p>Use this text to share information about your brand with your customers.<br>Describe a product, share announcements, or welcome customers to your store.</p>"
+    },
+    {
+      "type": "text",
+      "id": "author",
+      "label": "Author"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Our products"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "default": "/collections/all"
+    }
+  ],
+  "presets": [
+    {
+      "category": "Image",
+      "name": "Video with text",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}

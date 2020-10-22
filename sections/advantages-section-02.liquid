@@ -1,0 +1,210 @@
+{% if section.settings.show_section %}
+  <section class="section">
+    <div class="advntgs-02-01 flex-row">
+      {%- if section.settings.image_1 != blank -%}
+        <div class="advntgs-02-01--img">
+          <img class="w-100" src="{{ section.settings.image_1 | img_url: 'master' }}" alt="{{ section.settings.title_1 | strip_html }}">
+        </div>
+      {%- endif -%}
+      {%- if section.settings.title_1 != blank or section.settings.text_1 != blank -%}
+        <div class="advntgs-02-01--content" style="background-color: {{ section.settings.bg_color_1 }}">
+          <div class="w-100">
+            {%- if section.settings.title_1 != blank -%}
+              <h2 class="h0 advntgs-02-01--content-ttl">
+                {{ section.settings.title_1 }}
+              </h2>
+            {%- endif -%}
+            {%- if section.settings.text_1 != blank -%}
+              <div class="rte txt-body-1">
+                {{ section.settings.text_1 }}
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="advntgs-02-02 flex-row">
+        {%- if section.settings.image_reviews != blank -%}
+          <div class="advntgs-02-02--img">
+            <img class="w-100" src="{{ section.settings.image_reviews | img_url: 'master' }}" alt="{{ section.settings.title_reviews | strip_html }}">
+          </div>
+        {%- endif -%}
+        {%- if section.settings.title_reviews != blank or section.settings.text_reviews != blank -%}
+          <div class="advntgs-02-02--content">
+            <div class="advntgs-02-02--content-panel">
+              {%- if section.settings.title_reviews != blank -%}
+                <h2 class="h1 advntgs-02-02--content-ttl">
+                  {{ section.settings.title_reviews }}
+                </h2>
+              {%- endif -%}
+              <svg class="star-rating advntgs-02-02--content-stars" viewBox="0 0 170 30">
+                <rect class="bg-rect" x="0" y="0" width="100%" height="100%" clip-path="url(#star-empty)"></rect>
+                <rect class="rating-rect" x="0" y="0" width="100%" height="100%" clip-path="url(#star)"></rect>
+              </svg>
+              {%- if section.settings.text_reviews != blank -%}
+                <div class="rte txt-body-1">
+                  {{ section.settings.text_reviews }}
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+
+  <section class="section advntgs-02-03--sec">
+    <div class="container">
+      <div class="advntgs-02-03 flex-row">      
+        {%- if section.settings.image_2 != blank -%}
+          <div class="advntgs-02-03--img">
+            <img class="w-100" src="{{ section.settings.image_2 | img_url: 'master' }}" alt="{{ section.settings.title_2 | strip_html }}">
+          </div>
+        {%- endif -%}
+
+        <div class="advntgs-02-03--content">
+          {%- if section.settings.title_2 != blank -%}
+            <h2 class="h1">
+              {{ section.settings.title_2 }}
+            </h2>
+          {%- endif -%}
+          {%- if section.settings.text_2 != blank -%}
+            <div class="rte txt-body-1">
+              {{ section.settings.text_2 }}
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section advntgs-02-04--sec">
+    <div class="container">
+      <div class="w-100 position-relative">
+      </div>
+      <div class="advntgs-02-04 flex-row">      
+        {%- if section.settings.image_3 != blank -%}
+          <div class="advntgs-02-04--img">  
+            <div class="advntgs-02-04--figures">
+              <div class="advntgs-02-04--figures-door-1 door-bottom--bottom-right"></div>
+              <div class="advntgs-02-04--figures-door-2 door-bottom--top-right"></div>
+            </div>
+            <img class="w-100" src="{{ section.settings.image_3 | img_url: 'master' }}" alt="{{ section.settings.title_3 | strip_html }}">
+          </div>
+        {%- endif -%}
+
+        <div class="advntgs-02-04--content">
+          {%- if section.settings.title_3 != blank -%}
+            <h2 class="h1">
+              {{ section.settings.title_3 }}
+            </h2>
+          {%- endif -%}
+          {%- if section.settings.text_3 != blank -%}
+            <div class="rte txt-body-1">
+              {{ section.settings.text_3 }}
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product advantages",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_section",
+      "label": "Show section",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Section 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Image 1"
+    },
+    {
+      "type": "text",
+      "id": "title_1",
+      "label": "Title 1"
+    },
+    {
+      "type": "textarea",
+      "id": "text_1",
+      "label": "Text 1"
+    },
+    {
+      "type": "color",
+      "id": "bg_color_1",
+      "label": "Background color 1"
+    },
+    {
+      "type": "header",
+      "content": "Section reviews"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_reviews",
+      "label": "Image reviews"
+    },
+    {
+      "type": "text",
+      "id": "title_reviews",
+      "label": "Title reviews"
+    },
+    {
+      "type": "textarea",
+      "id": "text_reviews",
+      "label": "Text reviews"
+    },
+    {
+      "type": "header",
+      "content": "Section 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Image 2"
+    },
+    {
+      "type": "text",
+      "id": "title_2",
+      "label": "Title 2"
+    },
+    {
+      "type": "textarea",
+      "id": "text_2",
+      "label": "Text 2"
+    },
+    {
+      "type": "header",
+      "content": "Section 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_3",
+      "label": "Image 3"
+    },
+    {
+      "type": "text",
+      "id": "title_3",
+      "label": "Title 3"
+    },
+    {
+      "type": "textarea",
+      "id": "text_3",
+      "label": "Text 3"
+    }
+  ]
+}
+{% endschema %}

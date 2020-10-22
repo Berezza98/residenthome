@@ -1,0 +1,321 @@
+{%- comment -%}
+This header is only used for the password and gift card templates, and contains much less code compared to the original header code
+{%- endcomment -%}
+
+<section data-section-id="{{ section.id }}" data-section-type="minimal-header">
+  <header class="header" role="banner" style="color:#191919;">
+    <div class="container">
+      <div class="header__inner {% if request.page_type == 'gift_card' %}header__inner--centered{% endif %}">
+        {%- comment -%}
+        --------------------------------------------------------------------------------------
+        LOGO COMPONENT
+        --------------------------------------------------------------------------------------
+        {%- endcomment -%}
+
+        <h1 class="header__logo">
+          <a href="{{ routes.root_url }}" class="header__logo-link">
+            {%- if section.settings.logo != blank -%}
+              {%- capture image_size -%}{{ section.settings.logo_max_width }}x{%- endcapture -%}
+              <img class="header__logo-image"
+                   src="{{ section.settings.logo | img_url: image_size }}"
+                   srcset="{{ section.settings.logo | img_url: image_size }} 1x, {{ section.settings.logo | img_url: image_size, scale: 2 }} 2x"
+                   alt="{{ section.settings.logo.alt | default: shop.name | escape }}">
+            {%- else -%}
+              <span class="header__logo-text">{{ shop.name }}</span>
+            {%- endif -%}
+          </a>
+        </h1>
+
+        {%- if request.page_type == 'password' -%}
+          {%- comment -%}
+          --------------------------------------------------------------------------------------
+          HEADER ACTIONS
+          --------------------------------------------------------------------------------------
+          {%- endcomment -%}
+
+          <div class="header__action-list">
+            <div class="header__action-item header__action-item--password">
+              <div class="header__action-item-content" style="color:#191919;">
+                {%- assign form_has_errors = false -%}
+
+                {%- form 'storefront_password', name: 'password', class: 'form' -%}
+                  {%- if form.errors -%}
+                    {%- assign form_has_errors = true -%}
+                  {%- endif -%}
+                {%- endform -%}
+
+                <button class="header__action-item-link header__action-item-link--small" aria-controls="password-popover" aria-expanded="{% if form_has_errors %}true{% else %}false{% endif %}" data-action="toggle-popover">
+                  {% render 'icon', icon: 'lock-2' %} <span class="hidden-phone">{{ 'general.password.enter_password' | t }}</span>
+                </button>
+
+                <div id="password-popover" class="popover popover--large popover--password" aria-hidden="{% if form_has_errors %}false{% else %}true{% endif %}">
+                  {%- render 'icon', icon: 'nav-triangle-borderless' -%}
+
+                  <div class="popover__panel-list">
+                  <div id="header-login-panel" class="popover__panel popover__panel--default is-selected">
+                    <div class="popover__inner">
+                      {%- form 'storefront_password', name: 'password', class: 'form' -%}
+                        <header class="popover__header">
+                          <h1 class="popover__title heading">{{ 'general.password.enter_password' | t }}</h1>
+                        </header>
+
+                        {%- if form.errors -%}
+                          <p class="alert alert--error">{{ form.errors.messages['form'] }}</p>
+                        {%- endif -%}
+
+                        <div class="form__input-wrapper form__input-wrapper--labelled">
+                          <input type="password" id="password" class="form__field form__field--text" name="password" required="required">
+                          <label for="password" class="form__floating-label">{{ 'general.password.password_input' | t }}</label>
+                        </div>
+
+                        <button type="submit" class="form__submit button button--primary button--full">{{ 'general.password.password_submit' | t }}</button>
+                      {%- endform -%}
+                    </div>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </header>
+</section>
+
+<style>
+  :root {
+    --header-is-sticky: 1;
+  }
+
+  #shopify-section-{{ section.id }} {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+    .container--extra-narrow {
+      width:100%!important;
+    }
+    #shopify-section-password-template > section > div {width:100%;}
+    .newsletter {
+      margin-left:20px;
+      margin-right:20px;
+    
+    }
+    #shopify-section-password-template > section > div > div > div.password__content > div {padding:0;}
+    .password__content {
+      display:block;
+	  width:100%;
+      
+    }
+        @media screen and (max-width: 1199px) {
+    /*
+    .v-header-behind{
+    position: absolute;
+	width: 100%;
+	height: 622px;
+	left: 0px;
+	top: 0px;
+	background: #F7F7F6;
+    }*/
+    .v-header {
+    width:100%;
+	font-family: AkkuratStd;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 30px;
+	line-height: 120%;
+	/* or 41px */
+	/* grey */
+	color: #191919;
+      padding-top:40px;
+      padding-bottom:20px;
+    }
+    .v-top {
+	  display: flex;
+      flex-direction: row;
+      justify-content: space-evenly;
+      padding-top: 20px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+    .v-left {
+      width:100%;
+      text-align:left;
+      padding-bottom:40px;
+    }
+    .v-left h1 {
+    	font-family: AkkuratStd;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 30px;
+      padding-top:50px;
+      padding-bottom:20px;
+    }
+    .v-right {
+      width:100%;
+    }
+    #v-images {
+    display:flex;
+    flex-direction:row;
+    justify-content: space-evenly;
+    flex-wrap:wrap;
+    }
+    .v-image1 {
+	width: 300px;
+	height: 200px;
+    margin:20px 0;
+    background:url("https://cdn.shopify.com/s/files/1/0271/4307/7962/files/image2password.jpg?v=1598731645") no-repeat center;
+    }
+    .v-signup {
+	  height: auto;
+	  /* blue */
+	  background: #739EA8;
+      padding-bottom:20px;
+    }
+    .v-signup h2 {
+      padding-top:20px;
+      font-size:20px;
+    }
+    .v-image2{
+	width: 300px;
+	height: 200px;
+      margin:20px 0;
+   	background:url("https://cdn.shopify.com/s/files/1/0271/4307/7962/files/image3.jpg?v=1598714404") no-repeat center;
+    }
+    .v-image3 {
+	width: 300px;
+	height: 200px;
+    margin:20px 0;
+    background:url("https://cdn.shopify.com/s/files/1/0271/4307/7962/files/image2.jpg?v=1598715237") no-repeat center; 
+      padding-bottom:50px;
+    }
+
+  {%- if section.settings.logo -%}
+    .header__logo-image {
+      max-width: {{ section.settings.mobile_logo_max_width }}px;
+    }
+  }
+    
+    @media screen and (min-width: 1200px) {
+      .header__logo-image {
+        max-width: {{ section.settings.logo_max_width }}px;
+      }
+     .v-header {
+        position: absolute;
+        width:100%;
+        left: 50%;
+        top: 500px;
+        transform: translate(-50% , -50%);
+        -webkit-transform: translate(-50%, -50%);
+        font-family: AkkuratStd;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 30px;
+        line-height: 120%;
+        /* or 41px */
+        /* grey */
+        color: #191919;
+       text-align:center;
+    }
+    .v-top {
+	  display: flex;
+      flex-direction: row;
+      justify-content: space-evenly;
+      padding-top: 50px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+    .v-left {
+      width:50%;
+      text-align:left;
+    }
+    .v-left h1 {
+    	font-family: AkkuratStd;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 34px;
+	line-height: 200%;
+      padding-top:50px;
+    }
+    .v-right {
+      width:50%;
+    }
+    #v-images {
+    position: absolute;
+    top:550px;
+    display:flex;
+    flex-direction:row;
+    justify-content: space-evenly;
+    flex-wrap:wrap;
+    }
+    .v-image1 {
+	width: 300px;
+	height: 200px;
+    margin:0 50px;
+    background:url("https://cdn.shopify.com/s/files/1/0271/4307/7962/files/image2password.jpg?v=1598731645") no-repeat center;
+    }
+    .v-signup {
+      position:absolute;
+	  width: 570px;
+	  height: 224px;
+	  /* blue */
+	  background: #739EA8;
+    }
+    .v-signup h2 {
+      margin-top:40px;
+    }
+    .v-image2{
+	width: 300px;
+	height: 200px;
+      margin:0 50px;
+   	background:url("https://cdn.shopify.com/s/files/1/0271/4307/7962/files/image3.jpg?v=1598714404") no-repeat center;
+    }
+    .v-image3 {
+	width: 300px;
+	height: 200px;
+      margin:0 50px;
+    background:url("https://cdn.shopify.com/s/files/1/0271/4307/7962/files/image2.jpg?v=1598715237") no-repeat center;  
+    }
+    }
+  {%- endif -%}
+</style>
+
+<script>
+  document.documentElement.style.setProperty('--header-height', document.getElementById('shopify-section-minimal-header').clientHeight + 'px');
+</script>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image",
+      "info": "200 x 60px .png recommended"
+    },
+    {
+      "type": "range",
+      "id": "logo_max_width",
+      "min": 50,
+      "max": 300,
+      "step": 5,
+      "unit": "px",
+      "label": "Logo image width",
+      "default": 140
+    },
+    {
+      "type": "range",
+      "id": "mobile_logo_max_width",
+      "min": 50,
+      "max": 170,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile logo image width",
+      "default": 100
+    }
+  ]
+}
+{% endschema %}

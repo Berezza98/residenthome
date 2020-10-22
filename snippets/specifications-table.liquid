@@ -1,0 +1,329 @@
+<table class="specs-table specsTable">
+  <tbody>
+    {% if product.metafields.rug-specs.materials != blank %}
+      <tr>
+        <td>
+          Material
+        </td>
+        <td>
+          {{ product.metafields.rug-specs.materials }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if product.metafields.rug-specs.backing != blank %}
+      <tr>
+        <td>
+          Backing
+        </td>
+        <td>
+          {{ product.metafields.rug-specs.backing }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if product.metafields.rug-specs.construction != blank %}
+      <tr>
+        <td>
+          Construction
+        </td>
+        <td>
+          {{ product.metafields.rug-specs.construction }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if product.metafields.rug-specs.country != blank %}
+      <tr>
+        <td>
+          Origin
+        </td>
+        <td>
+          {{ product.metafields.rug-specs.country }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if product.metafields.rug-specs.style != blank %}
+      <tr>
+        <td>
+          Style
+        </td>
+        <td>
+          {{ product.metafields.rug-specs.style }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if product.metafields.rug-specs.pile-height != blank %}
+      <tr>
+        <td>
+          Pile Height
+        </td>
+        <td>
+          {{ product.metafields.rug-specs.pile-height }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if product.metafields.rug-specs.colors != blank %}
+      <tr>
+        <td>
+          Colors
+        </td>
+        <td>
+          {{ product.metafields.rug-specs.colors }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if product.metafields.rug-specs.pattern != blank %}
+      <tr>
+        <td>
+          Pattern
+        </td>
+        <td>
+          {{ product.metafields.rug-specs.pattern }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if product.metafields.rug-specs.fringe != blank %}
+      <tr>
+        <td>
+          Fringe
+        </td>
+        <td>
+          {{ product.metafields.rug-specs.fringe }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if product.metafields.rug-specs.outdoor != blank %}
+      <tr>
+        <td>
+          Indoor/Outdoor
+        </td>
+        <td>
+          {{ product.metafields.rug-specs.outdoor }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if product.metafields.rug-specs.reversible != blank %}
+      <tr>
+        <td>
+          Reversible
+        </td>
+        <td>
+          {{ product.metafields.rug-specs.reversible }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if product.metafields.rug-specs.eco != blank %}
+      <tr>
+        <td>
+          Eco-Friendly
+        </td>
+        <td>
+          {{ product.metafields.rug-specs.eco }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if product.metafields.rug-specs.distressed != blank %}
+      <tr>
+        <td>
+          Distressed
+        </td>
+        <td>
+          {{ product.metafields.rug-specs.distressed }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if product.metafields.rug-specs.stain != blank %}
+      <tr>
+        <td>
+          Strain Resistant
+        </td>
+        <td>
+          {{ product.metafields.rug-specs.stain }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if product.metafields.rug-specs.recycled != blank %}
+      <tr>
+        <td>
+          Recycled Content
+        </td>
+        <td>
+          {{ product.metafields.rug-specs.recycled }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% comment %} Decorative {% endcomment %}
+    {% if product.metafields.deco-specs.materials != blank %}
+      <tr>
+        <td>
+          Materials
+        </td>
+        <td>
+          {{ product.metafields.deco-specs.materials }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if product.metafields.deco-specs.style != blank %}
+      <tr>
+        <td>
+          Style
+        </td>
+        <td>
+          {{ product.metafields.deco-specs.style }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if product.metafields.deco-specs.country != blank %}
+      <tr>
+        <td>
+          Origin
+        </td>
+        <td>
+          {{ product.metafields.deco-specs.country }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if product.metafields.deco-specs.construction != blank %}
+      <tr>
+        <td>
+          Construction
+        </td>
+        <td>
+          {{ product.metafields.deco-specs.construction }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if product.metafields.deco-specs.outdoor != blank %}
+      <tr>
+        <td>
+          Outdoor Safe
+        </td>
+        <td>
+          {{ product.metafields.deco-specs.outdoor }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if product.metafields.deco-specs.tassels != blank %}
+      <tr>
+        <td>
+          Tassels
+        </td>
+        <td>
+          {{ product.metafields.deco-specs.tassels }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {% if product.metafields.deco-specs.fringe != blank %}
+      <tr>
+        <td>
+          Fringe
+        </td>
+        <td>
+          {{ product.metafields.deco-specs.fringe }}
+        </td>
+      </tr>
+    {% endif %}
+
+    {%- assign selected_variant = product.selected_or_first_available_variant -%}
+    {%- for variant in product.variants -%}
+      {% if variant.metafields.rug-specs.shape != blank %}
+        <tr class="dynamicSpec{% if variant != selected_variant %} d-none{% endif %}" data-variant-id="{{ variant.id }}">
+          <td>
+            Shape
+          </td>
+          <td>
+            {{ variant.metafields.rug-specs.shape }}
+          </td>
+        </tr>
+      {% endif %}
+
+      {% if variant.metafields.rug-specs.size != blank and variant.metafields.rug-specs.size != 0 %}
+        <tr class="dynamicSpec{% if variant != selected_variant %} d-none{% endif %}" data-variant-id="{{ variant.id }}">
+          <td>
+            Dimensions
+          </td>
+          <td>
+            {{ variant.metafields.rug-specs.size }}
+          </td>
+        </tr>
+      {% endif %}
+      
+      {% if variant.metafields.rug-specs.weight != blank %}
+        <tr class="dynamicSpec{% if variant != selected_variant %} d-none{% endif %}" data-variant-id="{{ variant.id }}">
+          <td>
+            Weight
+          </td>
+          <td>
+            {{ variant.metafields.rug-specs.weight }}
+          </td>
+        </tr>
+      {% endif %}
+
+      {% comment %} Decorative {% endcomment %}
+      {% if variant.metafields.deco-specs.shape != blank %}
+        <tr class="dynamicSpec{% if variant != selected_variant %} d-none{% endif %}" data-variant-id="{{ variant.id }}">
+          <td>
+            Shape
+          </td>
+          <td>
+            {{ variant.metafields.deco-specs.shape }}
+          </td>
+        </tr>
+      {% endif %}
+
+      {% if variant.metafields.deco-specs.size != blank and variant.metafields.deco-specs.size != 0 %}
+        <tr class="deco-size dynamicSpec{% if variant != selected_variant %} d-none{% endif %}" data-variant-id="{{ variant.id }}">
+          <td>
+            Size
+          </td>
+          <td>
+            {{ variant.metafields.deco-specs.size }}
+          </td>
+        </tr>
+      {% endif %}
+
+      {% if variant.metafields.deco-specs.colors != blank %}
+        <tr class="dynamicSpec{% if variant != selected_variant %} d-none{% endif %}" data-variant-id="{{ variant.id }}">
+          <td>
+            Colors
+          </td>
+          <td>
+            {{ variant.metafields.deco-specs.colors }}
+          </td>
+        </tr>
+      {% endif %}
+
+      {% if variant.metafields.deco-specs.fill != blank %}
+        <tr class="dynamicSpec{% if variant != selected_variant %} d-none{% endif %}" data-variant-id="{{ variant.id }}">
+          <td>
+            Fill
+          </td>
+          <td>
+            {{ variant.metafields.deco-specs.fill }}
+          </td>
+        </tr>
+      {% endif %}
+    {%- endfor -%}
+
+
+  </tbody>
+</table>

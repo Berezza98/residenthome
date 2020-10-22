@@ -1,0 +1,192 @@
+{% if section.settings.show_section %}
+  {% if product.metafields.bundle.specifications-image != blank %}
+    <div class="section">
+      <div class="container container--medium">
+        <img class="w-100" src="{{ product.metafields.bundle.specifications-image }}" alt="{{ product.title }} specs image top">
+      </div>
+    </div>
+  {% endif %}
+
+  <section class="sec--specs1" data-section-id="{{ section.id }}" data-section-type="product-specs">
+    <div class="sec--specs1-container container container--narrow position-relative">
+      <h2 class="h2 sec--specs1-ttl">
+        {{ product.title }} specs
+      </h2>
+      <div class="sec--specs1-row flex-row">
+        {% if product.metafields.bundle.customization-options != blank %}
+          <div class="sec--specs-cell">
+            <div class="sec--specs-cell-ttl">Customization Options</div>
+            <div class="sec--specs-cell-text">
+              {{ product.metafields.bundle.customization-options | replace: ' ', '' }}
+            </div>
+          </div>
+        {% endif %}
+
+        {% if product.metafields.bundle.details != blank %}
+          <div class="sec--specs-cell">
+            <div class="sec--specs-cell-ttl">Details</div>
+            <div class="sec--specs-cell-text">
+              {{ product.metafields.bundle.details | replace: ' ', '' }}
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="sec--specs-cell">
+          <div class="sec--specs-cell-ttl">Dimensions</div>
+          <div class="sec--specs-cell-text">
+            <table class="specs-table1 specsTable">
+              <tbody>
+                {% if product.metafields.bundle.width != blank %}
+                  <tr>
+                    <td>
+                      Width
+                    </td>
+                    <td>
+                      {{ product.metafields.bundle.width }}
+                    </td>
+                  </tr>
+                {% endif %}
+                {% if product.metafields.bundle.depth != blank %}
+                  <tr>
+                    <td>
+                      Depth
+                    </td>
+                    <td>
+                      {{ product.metafields.bundle.depth }}
+                    </td>
+                  </tr>
+                {% endif %}
+                {% if product.metafields.bundle.height != blank %}
+                  <tr>
+                    <td>
+                      Height
+                    </td>
+                    <td>
+                      {{ product.metafields.bundle.height }}
+                    </td>
+                  </tr>
+                {% endif %}
+                {% if product.metafields.bundle.seat-height != blank %}
+                  <tr>
+                    <td>
+                      Seat Height
+                    </td>
+                    <td>
+                      {{ product.metafields.bundle.seat-height }}
+                    </td>
+                  </tr>
+                {% endif %}
+                {% if product.metafields.bundle.seat-depth != blank %}
+                  <tr>
+                    <td>
+                      Seat Depth
+                    </td>
+                    <td>
+                      {{ product.metafields.bundle.seat-depth }}
+                    </td>
+                  </tr>
+                {% endif %}
+                {% if product.metafields.bundle.distance-between-the-arms != blank %}
+                  <tr>
+                    <td>
+                      Distance Between the Arms 
+                    </td>
+                    <td>
+                      {{ product.metafields.bundle.distance-between-the-arms }}
+                    </td>
+                  </tr>
+                {% endif %}
+                {% if product.metafields.bundle.arm-height != blank %}
+                  <tr>
+                    <td>
+                      Arm Height
+                    </td>
+                    <td>
+                      {{ product.metafields.bundle.arm-height }}
+                    </td>
+                  </tr>
+                {% endif %}
+                {% if product.metafields.bundle.total-height != blank %}
+                  <tr>
+                    <td>
+                      Total Height
+                    </td>
+                    <td>
+                      {{ product.metafields.bundle.total-height }}
+                    </td>
+                  </tr>
+                {% endif %}
+                {% if product.metafields.bundle.frame-height != blank %}
+                  <tr>
+                    <td>
+                      Frame Height
+                    </td>
+                    <td>
+                      {{ product.metafields.bundle.frame-height }}
+                    </td>
+                  </tr>
+                {% endif %}
+                {% if product.metafields.bundle.seat-back-height != blank %}
+                  <tr>
+                    <td>
+                      Seat Back Height
+                    </td>
+                    <td>
+                      {{ product.metafields.bundle.seat-back-height }}
+                    </td>
+                  </tr>
+                {% endif %}
+                {% if product.metafields.bundle.arm-width != blank %}
+                  <tr>
+                    <td>
+                      Arm Width
+                    </td>
+                    <td>
+                      {{ product.metafields.bundle.arm-width }}
+                    </td>
+                  </tr>
+                {% endif %}
+                {% if product.metafields.bundle.seat-cushion-thickness != blank %}
+                  <tr>
+                    <td>
+                      Seat Cushion Thickness
+                    </td>
+                    <td>
+                      {{ product.metafields.bundle.seat-cushion-thickness }}
+                    </td>
+                  </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="sec--specs1-figure d-none">
+        <div class="sec--specs1-figure-door door-bottom--bottom-right"></div>
+      </div>
+    </div>
+  </section>
+
+  {%- if section.settings.image_bottom != blank -%}
+    <img class="w-100" src="{{ section.settings.image_bottom | img_url: 'master' }}" alt="{{ product.title }} specs image">
+  {%- endif -%}
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product specifications 1",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_section",
+      "label": "Show section",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "image_bottom",
+      "label": "Image bottom"
+    }
+  ]
+}
+{% endschema %}

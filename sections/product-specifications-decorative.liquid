@@ -1,0 +1,54 @@
+{% if section.settings.show_section %}
+  <section class="sec--specs" data-section-id="{{ section.id }}" data-section-type="product-specs">
+    <div class="container container--flush">
+      <div class="sec--specs-row mod-decorative">
+        <div class="sec--specs-features">
+          {% if product.metafields.pouf-features-1.feature-image != blank %}
+            <img class="sec--specs-features-info-img w-100" src="{{ product.metafields.pouf-features-1.feature-image }}" alt="Image">
+          {% endif %}
+          {% if product.metafields.pouf-features-1.feature-title != blank or product.metafields.pouf-features-1.feature-text != blank %}
+            <div class="sec--specs-features-info">
+              <h2 class="h1">{{ product.metafields.pouf-features-1.feature-title }}</h2>
+              <div class="rte">
+                {{ product.metafields.pouf-features-1.feature-text }}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="sec--specs-specs">
+          <div class="sec--specs-specs-figure">
+            <div class="sec--specs-specs-figure-door door-bottom--bottom-right"></div>
+          </div>
+          <div class="specsTableParent">
+            {% if section.settings.title != blank %}
+              <h3 class="h3">
+                {{ section.settings.title }}
+              </h3>
+            {% endif %}
+            {% render 'specifications-table' %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product specifications",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_section",
+      "label": "Show section",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    }
+  ]
+}
+{% endschema %}

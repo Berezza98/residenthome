@@ -1,0 +1,56 @@
+<section class="sec--benefits" data-section-id="{{ section.id }}" data-section-type="benefits">
+  <div class="container">
+    <div class="sec--benefits-row">
+      {%- if section.settings.text != blank -%}
+        <div class="sec--benefits-text">
+          {{ section.settings.text }}
+        </div>
+      {%- endif -%}
+      <div class="sec--benefits-items">
+        <div class="scroller scroller--flush">
+          <div class="scroller__inner">
+            <div class="list-scrollable sec--benefits-items-row">
+              {%- for block in section.blocks -%}
+                <div class="pdp-atc--cell">
+                  <div class="pdp-atc">
+                    <div class="pdp-atc--content">
+                      {{- block.settings.text -}}
+                    </div>
+                  </div>
+                </div>
+              {%- endfor -%}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Benefits",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Resident is shipped directly to your doorstep. Feel confident in your choice with our warranty. If you are not compleltely satisfied, you can send it back for a full refund, guaranteed."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Link",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Your text"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

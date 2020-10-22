@@ -1,0 +1,96 @@
+<section class="section sec--image-with-text-1 position-relative{% if section.settings.hide_on_mobile == true %} hidden-phone{% endif %}" data-section-id="{{ section.id }}" data-section-type="image-with-text">
+  <div class="sec--image-with-text-1-lines">
+    <div class="sec--slideshow-bottom-figure door-top--top-left"></div>
+  </div>
+  <div class="container">
+
+    <div class="image-with-text mod-1">
+      <div class="image-with-text__image-container">
+        {%- if section.settings.image -%}
+          <div class="aspect-ratio" style="padding-bottom: {{ 100.0 | divided_by: section.settings.image.aspect_ratio }}%">
+            {%- capture supported_sizes -%}{%- render 'image-size', sizes: '300,400,500,600,700,800,900,1000,1100,1200', image: section.settings.image -%}{%- endcapture -%}
+            {%- assign image_url = section.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+
+            <img class="lazyload image--fade-in" data-src="{{ image_url }}" data-widths="[{{ supported_sizes }}]" data-sizes="auto" alt="{{ section.settings.image.alt | escape }}">
+
+            <noscript>
+              <img src="{{ section.settings.image | img_url: '800x' }}" alt="{{ section.settings.image.alt | escape }}">
+            </noscript>
+          </div>
+        {%- else -%}
+          {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.title != blank -%}
+        <div class="w-100"></div>
+        <div class="image-with-text__title-container">
+          <h2 class="heading h2">{{ section.settings.title }}</h2>
+        </div>
+      {%- endif -%}
+
+      <div class="image-with-text__text-container">
+        <div class="image-with-text__text-aligner">
+          <div class="rte">
+            {{ section.settings.content }}
+
+            {%- if section.settings.button_link != blank and section.settings.button_text != blank -%}
+              <a href="{{ section.settings.button_link }}" class="button button--primary">{{ section.settings.button_text | escape }}</a>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Image with text 1",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile?",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "1200 x 800px .jpg recommended"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Your title"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Text",
+      "default": "<p>Use this text to share information about your brand with your customers.<br>Describe a product, share announcements, or welcome customers to your store.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Our products"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "default": "/collections/all"
+    }
+  ],
+  "presets": [
+    {
+      "category": "Image",
+      "name": "Image with text 1",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}

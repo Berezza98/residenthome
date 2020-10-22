@@ -1,0 +1,104 @@
+{% if section.settings.show_section %}
+  <section class="sec--specs" data-section-id="{{ section.id }}" data-section-type="product-specs">
+    <div class="container container--flush">
+      <div class="sec--specs-row">
+        <div class="sec--specs-features">
+          <div class="sec--specs-features-content">
+            {% if product.metafields.rug-info.materialimage != blank and product.metafields.rug-info.materialtext != blank %}
+              <div class="icon-div">
+                <div class="icon-div--img">
+                  <img src="{{ product.metafields.rug-info.materialimage }}" alt="Material">
+                </div>
+                <div class="icon-div--content">
+                  <h5 class="icon-div--ttl h5">
+                    Material
+                  </h5>
+                  <div class="rte">
+                    {{ product.metafields.rug-info.materialtext }}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+            {% if product.metafields.rug-info.pileimage != blank and product.metafields.rug-info.piletext != blank %}
+              <div class="icon-div">
+                <div class="icon-div--img">
+                  <img src="{{ product.metafields.rug-info.pileimage }}" alt="Material">
+                </div>
+                <div class="icon-div--content">
+                  <h5 class="icon-div--ttl h5">
+                    Pile
+                  </h5>
+                  <div class="rte">
+                    {{ product.metafields.rug-info.piletext }}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+            {% if product.metafields.rug-info.constructionimage != blank and product.metafields.rug-info.constructiontext != blank %}
+              <div class="icon-div">
+                <div class="icon-div--img">
+                  <img src="{{ product.metafields.rug-info.constructionimage }}" alt="Material">
+                </div>
+                <div class="icon-div--content">
+                  <h5 class="icon-div--ttl h5">
+                    Construction
+                  </h5>
+                  <div class="rte">
+                    {{ product.metafields.rug-info.constructiontext }}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+            {% if product.metafields.rug-info.lifestyleimage != blank and product.metafields.rug-info.lifestyletext != blank %}
+              <div class="icon-div">
+                <div class="icon-div--img">
+                  <img src="{{ product.metafields.rug-info.lifestyleimage }}" alt="Material">
+                </div>
+                <div class="icon-div--content">
+                  <h5 class="icon-div--ttl h5">
+                    Lifestyle
+                  </h5>
+                  <div class="rte">
+                    {{ product.metafields.rug-info.lifestyletext }}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+        <div class="sec--specs-specs">
+          <div class="sec--specs-specs-figure">
+            <div class="sec--specs-specs-figure-door door-bottom--bottom-right"></div>
+          </div>
+          <div class="specsTableParent">
+            {% if section.settings.title != blank %}
+              <h3 class="h3">
+                {{ section.settings.title }}
+              </h3>
+            {% endif %}
+            {% render 'specifications-table' %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product specifications",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_section",
+      "label": "Show section",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,29 @@
+<section class="section sec--instagram" data-section-id="{{ section.id }}" data-section-type="instagram">
+  <div class="container">
+    {%- if section.settings.title != blank -%}
+      <h2 class="sec--instagram-title section__title heading h4">
+        <span class="sec--instagram-title-bg">
+          {{ section.settings.title }}
+        </span>
+      </h2>
+    {%- endif -%}
+    {{section.settings.html_area}}
+    <div class="scroller">
+      <div class="scroller__inner">
+        {% unless section.settings.html_area contains "feed-" %}
+          <div id="insta-feed"></div>
+        {% endunless  %}
+      </div>
+    </div>
+  </div>
+</section>
+{%schema%}
+  {
+    "name":"Instafeed App",
+    "settings":[
+      {"type":"text","label":"Title","id":"title","default": "Join Our Community"},
+      {"type":"html","id":"html_area","label":"Custom Code (optional)","default":"<!-- -->","info":"Save to see your changes"}],
+      "presets":[{"name":"Instafeed App","category":"Instagram Feed"}
+    ]
+  }
+{%endschema%}

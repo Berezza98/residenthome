@@ -1,0 +1,724 @@
+{%- comment -%}We start by creating a lot of useful variables !{%- endcomment -%}
+
+{%- assign items_per_page = cart.attributes.collection_products_per_page | default: section.settings.default_products_per_page -%}
+
+{%- assign has_visible_tags = false -%}
+{%- assign productsTotal = collection.all_products_count -%}
+
+{%- if section.settings.show_filters -%}
+  {%- if section.settings.filter_type == 'tag' -%}
+    {%- for tag in collection.all_tags -%}
+      {%- unless tag contains '__' -%}
+        {%- assign has_visible_tags = true -%}
+        {%- break -%}
+      {%- endunless -%}
+    {%- endfor -%}
+  {%- elsif section.settings.filter_type == 'group' -%}
+    {%- for tag in collection.all_tags -%}
+      {%- assign tag_parts = tag | split: '_' -%}
+
+      {%- if tag_parts.size >= 2 -%}
+        {%- assign has_visible_tags = true -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- assign quick_links_menu = linklists[section.settings.quick_links] -%}
+
+{%- if quick_links_menu.links.size > 0 or has_visible_tags -%}
+  {%- assign has_filters = true -%}
+{%- else -%}
+  {%- assign has_filters = false -%}
+{%- endif -%}
+
+{%- if has_filters -%}
+  {%- capture grid_classes -%}1/3--tablet-and-up 1/{{ section.settings.products_per_row }}--desk{%- endcapture -%}
+{%- else -%}
+  {%- capture grid_classes -%}1/3--tablet 1/{{ section.settings.products_per_row }}--lap-and-up{%- endcapture -%}
+{%- endif -%}
+
+{%- assign view_mode = cart.attributes.collection_layout | default: section.settings.default_view_layout -%}
+
+{%- capture section_settings -%}
+{
+  "currentSortBy": {{ collection.sort_by | default: collection.default_sort_by | json }},
+  "currentTags": [{% for tag in current_tags %}{{ tag | handle | json }}{% unless forloop.last %},{% endunless %}{% endfor %}],
+  "filterType": {{ section.settings.filter_type | json }},
+  "defaultLayout": {{ section.settings.default_view_layout | json }},
+  "defaultProductsPerPage": {{ section.settings.default_products_per_page | json }},
+  "isAutomatic": {% if collection.current_vendor != blank %}true{% else %}false{% endif %},
+  "gridClasses": {{ grid_classes | json }}
+}
+{%- endcapture -%}
+
+{%- capture productGridImage -%}
+  {%- if section.settings.announcement_tile_title != blank or section.settings.announcement_tile_text != blank -%}
+    <div class="product-item product-item--banner {% if horizontal %}product-item--horizontal{% elsif list %}product-item--list{% else %}product-item--vertical{% endif %} {{ grid_classes }}">
+      <div class="product-grid--promo" style="background-color: {{ section.settings.announcement_tile_color }};">
+        <h2 class="heading product-grid--promo-ttl">{{ section.settings.announcement_tile_title }}</h2>
+        <div class="rte">
+          {{ section.settings.announcement_tile_text }}
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- assign custom_count = 0 -%}
+{% for product in collection.products %}
+  {% for option in product.options %}
+    {% if option == 'Color' %}
+      {% assign index = forloop.index0 %}
+      {% assign colorlist = '' %}
+      {% assign color = '' %}
+      {% for variant in product.variants %}
+        {% capture color %}
+          {{ variant.options[index] }}
+        {% endcapture %}
+        {% unless colorlist contains color %}
+          {%- assign custom_count = custom_count | plus: 1 -%}
+          {% capture tempList %}
+            {{colorlist | append: color | append: " " }}
+          {% endcapture %}
+          {% assign colorlist = tempList %}
+        {% endunless %}
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+{% endfor %}
+
+<section data-section-id="{{ section.id }}" data-section-type="collection" data-section-settings='{{ section_settings }}'>
+  {%- if section.settings.announcement_tile_title != blank or section.settings.announcement_tile_text != blank -%}
+    <div id="productsGridImage" class="d-none">
+      {{ productGridImage }}
+    </div>
+  {%- endif -%}
+
+  {% if collection.description != blank or collection.image != blank %}
+    <div class="collection-hero1">
+      <div class="container collection-hero1--container section--text-centered">
+        {%- if section.settings.show_collection_image and collection.image -%}
+          <h1 class="sr-only">{{ collection.title }}</h1>
+          <img class="image--fade-in lazyload" data-src="{{ collection.image | img_url: 'master' }}" alt="{{ collection.image.alt | escape }}">
+        {%- else -%}
+          <h1 class="collection__title heading h1">
+            {%- if collection.handle == 'all' -%}
+              {{- 'collection.general.all_products' | t -}}
+            {%- else -%}
+              {{- collection.title -}}
+            {%- endif -%}
+          </h1>
+        {%- endif -%}
+        
+        {%- if collection.description != blank -%}
+          {%- assign allow_collapse_description = false -%}
+
+          {%- if section.settings.collapse_collection_description -%}
+            {%- assign allow_collapse_description = true -%}
+          {%- endif -%}
+
+          <div class="collection__description {% if allow_collapse_description %}expandable-content{% endif %}" aria-expanded="false">
+            <div class="collection-hero1--description">
+              {{ collection.description }}
+            </div>
+
+            {%- if allow_collapse_description -%}
+              <button class="expandable-content__toggle">
+                <span class="expandable-content__toggle-icon"></span>
+                <span class="expandable-content__toggle-text" data-view-more="{{ 'collection.general.view_more' | t | escape }}" data-view-less="{{ 'collection.general.view_less' | t | escape }}">{{- 'collection.general.view_more' | t -}}</span>
+              </button>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  {% endif %}
+  <div class="collection-hero1--line">
+    <div class="collection-hero1--line-figure door-bottom--bottom-left"></div>
+  </div>
+  <div class="container container--flush">
+    {% comment %} {%- paginate collection.products by items_per_page -%}{%- endpaginate -%} {% endcomment %}
+    {%- paginate collection.products by 1000 -%}
+      <div class="collection">
+
+        {%- comment -%}
+        --------------------------------------------------------------------------------------
+        TOP PART (COLLECTION INFO + TOOLBAR)
+        --------------------------------------------------------------------------------------
+        {%- endcomment -%}
+
+        {%- if collection.all_products_count == 0 -%}
+          <div class="empty-state">
+            <p class="empty-state__heading heading h1">{{ collection.title }}</p>
+            <p class="empty-state__description">{{ 'collection.general.empty' | t }}</p>
+
+            <div class="empty-state__button-container">
+              <a href="{{ routes.root_url }}" class="empty-state__button button button--primary">{{ 'collection.general.empty_button' | t }}</a>
+            </div>
+          </div>
+        {%- else -%}
+          <div class="card {% if collection.products_count == 0 %}clearfix{% endif %}">
+
+            <div class="collection__dynamic-part">
+              <div class="collection__toolbar {% if collection.description != blank or collection.template_suffix == 'brand' %}collection__toolbar--bordered{% endif %}">
+                
+                <div class="collection__toolbar-item collection__toolbar-item--count">
+                  {%- assign offset = paginate.current_offset | plus: 1 -%}
+                  {%- assign page_size = paginate.current_offset | plus: paginate.page_size | at_most: paginate.items -%}
+
+                  {% comment %} <span class="collection__showing-count">{{ 'collection.general.showing_count' | t: offset: offset, page_size: page_size, count: paginate.items }}</span> {% endcomment %}
+                  <span class="collection__showing-count">
+                    {{ 'collection.general.showing_count' | t: offset: offset, page_size: custom_count, count: custom_count }}
+                  </span>
+
+                  <div class="value-picker-wrapper d-none">
+                    <button class="value-picker-button" aria-haspopup="true" aria-expanded="false" aria-controls="display-by-selector" data-action="open-value-picker">
+                      <span class="hidden-phone">{{ 'collection.general.display' | t }}: {{ 'collection.general.page_size' | t: page_size: paginate.page_size }}</span><!--
+                      -->{%- render 'icon', icon: 'arrow-bottom' -%}
+                    </button>
+
+                    <div id="display-by-selector" class="value-picker" aria-hidden="true">
+                      {% render 'icon', icon: 'nav-triangle-borderless' %}
+
+                      <div class="value-picker__inner">
+                        <header class="value-picker__header">
+                          <span class="value-picker__title text--strong">{{ 'collection.general.display' | t }}</span>
+                          <button class="value-picker__close" data-action="close-value-picker" aria-controls="display-by-selector" aria-label="{{ 'general.accessibility.close' | t }}">{% render 'icon', icon: 'close' %}</button>
+                        </header>
+
+                        <div class="value-picker__choice-list">
+                          <button class="value-picker__choice-item link {% if items_per_page == 24 %}is-selected{% endif %}" data-action="select-value" data-value="24">{{ 'collection.general.page_size' | t: page_size: 24 }} {% render 'icon', icon: 'check-2' %}</button>
+                          <button class="value-picker__choice-item link {% if items_per_page == 36 %}is-selected{% endif %}" data-action="select-value" data-value="36">{{ 'collection.general.page_size' | t: page_size: 36 }} {% render 'icon', icon: 'check-2' %}</button>
+                          <button class="value-picker__choice-item link {% if items_per_page == 48 %}is-selected{% endif %}" data-action="select-value" data-value="48">{{ 'collection.general.page_size' | t: page_size: 48 }} {% render 'icon', icon: 'check-2' %}</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="collection__toolbar-item collection__toolbar-item--sort">
+                  {%- assign collection_sort_by = collection.sort_by | default: collection.default_sort_by -%}
+
+                  {%- for option in collection.sort_options -%}
+                    {%- if option.value == collection_sort_by -%}
+                      {%- assign collection_sort_by_name = option.name -%}
+                      {%- break -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+
+                  <div class="value-picker-wrapper">
+                    <button class="value-picker-button" aria-haspopup="true" aria-expanded="false" aria-controls="sort-by-selector" data-action="open-value-picker">
+                      <span class="hidden-tablet-and-up">{{ 'collection.sorting.title' | t }}</span><!--
+                      --><span class="hidden-phone sortByLabel">{{ 'collection.sorting.title' | t }}: {{ collection_sort_by_name }}</span><!--
+                      -->{%- render 'icon', icon: 'arrow-bottom' -%}
+                    </button>
+
+                    <div id="sort-by-selector" class="value-picker" aria-hidden="true">
+                      {% render 'icon', icon: 'nav-triangle-borderless' %}
+
+                      <div class="value-picker__inner">
+                        <header class="value-picker__header">
+                          <span class="value-picker__title text--strong">{{ 'collection.sorting.title' | t }}</span>
+                          <button class="value-picker__close" data-action="close-value-picker" aria-controls="sort-by-selector" aria-label="{{ 'general.accessibility.close' | t }}">{% render 'icon', icon: 'close' %}</button>
+                        </header>
+
+                        <div class="value-picker__choice-list">
+                          {%- for option in collection.sort_options -%}
+                            <button class="value-picker__choice-item link {% if option.value == collection_sort_by %}is-selected{% endif %}" data-action="select-value" data-value="{{ option.value }}">{{ option.name }} {% render 'icon', icon: 'check-2' %}</button>
+                          {%- endfor -%}
+                          <button class="value-picker__choice-item link sortByColor" data-action="select-value" data-value="color">Color</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="collection__toolbar-item collection__toolbar-item--layout">
+                  <span class="collection__layout-label hidden-phone">{{ 'collection.layout.title' | t }}</span>
+
+                  {%- if section.settings.default_view_layout == 'grid' -%}
+                    <button type="button" class="collection__layout-button {% if view_mode == 'grid' %}is-selected{% endif %} link touch-area" aria-label="{{ 'collection.layout.grid' | t }}" data-action="change-layout" data-layout-mode="grid">{% render 'icon', icon: 'grid' %}</button>
+                    <button type="button" class="collection__layout-button {% if view_mode == 'list' %}is-selected{% endif %} link touch-area" aria-label="{{ 'collection.layout.list' | t }}" data-action="change-layout" data-layout-mode="list">{% render 'icon', icon: 'list' %}</button>
+                  {%- else -%}
+                    <button type="button" class="collection__layout-button {% if view_mode == 'list' %}is-selected{% endif %} link touch-area" aria-label="{{ 'collection.layout.list' | t }}" data-action="change-layout" data-layout-mode="list">{% render 'icon', icon: 'list' %}</button>
+                    <button type="button" class="collection__layout-button {% if view_mode == 'grid' %}is-selected{% endif %} link touch-area" aria-label="{{ 'collection.layout.grid' | t }}" data-action="change-layout" data-layout-mode="grid">{% render 'icon', icon: 'grid' %}</button>
+                  {%- endif -%}
+                </div>
+              </div>
+
+              {%- comment -%}
+              --------------------------------------------------------------------------------------
+              COLLECTION PRODUCTS
+              --------------------------------------------------------------------------------------
+              {%- endcomment -%}
+
+              {%- if collection.products_count == 0 -%}
+                <div class="empty-state empty-state--tight">
+                  <p class="empty-state__description">{{ 'collection.general.no_results' | t }}</p>
+
+                  <div class="empty-state__button-container">
+                    <button class="empty-state__button button button--primary" data-action="clear-tags">{{ 'collection.filter.clear_all' | t }}</button>
+                  </div>
+                </div>
+              {%- else -%}
+                {%- if view_mode == 'grid' -%}
+                  {%- assign show_as_list = false -%}
+                {%- else -%}
+                  {%- assign show_as_list = true -%}
+                {%- endif -%}
+
+                <div class="productsGrid product-list product-list--collection">
+                  {{ productGridImage }}
+                  
+                  {% for product in collection.products %}
+                    {% for option in product.options %}
+                      {% if option == 'Color' %}
+                        {% assign index = forloop.index0 %}
+                        {% assign colorlist = '' %}
+                        {% assign color = '' %}
+                        {% for variant in product.variants %}
+                          {% capture color %}
+                            {{ variant.options[index] }}
+                          {% endcapture %}
+                          {% unless colorlist contains color %}
+
+                            {%- render 'variant-item', color: color, variant: variant, product: product, list: show_as_list, grid_classes: grid_classes -%}
+
+                            {% capture tempList %}
+                              {{colorlist | append: color | append: " " }}
+                            {% endcapture %}
+                            {% assign colorlist = tempList %}
+                          {% endunless %}
+                        {% endfor %}
+                      {% endif %}
+                    {% endfor %}
+                  {% endfor %}
+                </div>
+                {%- render 'pagination', paginate: paginate -%}
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endpaginate -%}
+  </div>
+
+  {%- comment -%}
+  --------------------------------------------------------------------------------------
+  QUICK VIEW CONTAINER
+  --------------------------------------------------------------------------------------
+  {%- endcomment -%}
+
+  <div id="modal-quick-view-{{ section.id }}" class="modal" aria-hidden="true">
+    <div class="modal__dialog modal__dialog--stretch" role="dialog">
+      <button class="modal__close link" data-action="close-modal">{%- render 'icon', icon: 'close' -%}</button>
+
+      <div class="modal__loader">
+        {%- render 'icon', icon: 'search-loader' -%}
+      </div>
+
+      <div class="modal__inner"></div>
+    </div>
+  </div>
+</section>
+
+{%- paginate collection.products by 1000 -%}
+{%- if collection.products.size > 0 -%}
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+  <script>
+    const grid_classes = "product-item {% if horizontal %}product-item--horizontal{% elsif list %}product-item--list{% else %}product-item--vertical{% endif %} {{ grid_classes }}";
+    const colorSortArray = [
+      'Snow',
+      'Sand Beige',
+      'Light Grey',
+      'Indigo',
+      ''
+    ];
+
+    const collectionArray = [
+    {%- for product in collection.products -%}
+      {%- for option in product.options -%}
+        {%- if option == 'Color' -%}
+          {% assign index = forloop.index0 %}
+          {% assign colorlist = '' %}
+          {% assign color = '' %}
+          {%- for variant in product.variants -%}
+            {%- capture color -%}
+              {{ variant.options[index] }}
+            {%- endcapture -%}
+            {%- unless colorlist contains color -%}
+
+              {%- capture price_list -%}
+                {%- if product.price < product.compare_at_price -%}
+                  {%- if product.compare_at_price_varies -%}
+                    {%- capture price_min -%}<span>{{ product.price_min | money_without_trailing_zeros }}</span>{%- endcapture -%}
+                    {%- capture price_max -%}<span>{{ product.price_max | money_without_trailing_zeros }}</span>{%- endcapture -%}
+                    <span class="price price--highlight">{{ 'collection.product.from_price_html' | t: price_min: price_min, price_max: price_max }}</span>
+                    <span class="price price--compare">{{ product.compare_at_price_min | money_without_trailing_zeros }}</span>
+                  {%- else -%}
+                    <span class="price price--highlight">{{ product.price | money_without_trailing_zeros }}</span>
+                    <span class="price price--compare">{{ product.compare_at_price | money_without_trailing_zeros }}</span>
+                  {%- endif -%}
+                {%- elsif product.price_varies -%}
+                  {%- capture price_min -%}<span>{{ product.price_min | money_without_trailing_zeros }}</span>{%- endcapture -%}
+                  {%- capture price_max -%}<span>{{ product.price_max | money_without_trailing_zeros }}</span>{%- endcapture -%}
+                  <span class="price">{{ 'collection.product.from_price_html' | t: price_min: price_min, price_max: price_max }}</span>
+                {%- else -%}
+                  <span class="price">{{ product.price | money_without_trailing_zeros }}</span>
+                {%- endif -%}
+              {%- endcapture -%}
+              {%- capture product_images -%}
+                {%- if settings.show_secondary_image and product.media.size > 1 -%}
+                  {%- assign show_secondary_media = true -%}
+                {%- else -%}
+                  {%- assign show_secondary_media = false -%}
+                {%- endif -%}
+                {%- if product.media.size > 0 -%}
+
+                  {%- if variant.featured_media -%}
+                    {%- assign primary_media = variant.featured_media -%}
+                  {%- else -%}
+                    {%- assign primary_media = product.featured_media -%}
+                  {%- endif -%}
+
+                  {%- if request.page_type == 'collection' and section.settings.show_filters and section.settings.filter_type == 'group' -%}
+                    {%- assign matched_color_option = '' -%}
+
+                    {%- for tag in current_tags -%}
+                      {%- assign tag_parts = tag | split: '_' -%}
+                      {%- assign tag_group_name = tag_parts | first | downcase -%}
+                      {%- assign tag_group_value = tag_parts | last | downcase -%}
+
+                      {%- if color_label contains tag_group_name -%}
+                        {%- comment -%}We have found a matching color label, then we check if this product contains an option named the same{%- endcomment -%}
+
+                        {%- for option in product.options -%}
+                          {%- assign downcased_option = option | downcase -%}
+
+                          {%- if downcased_option == tag_group_name -%}
+                            {%- comment -%}We have found the index of the matching option, so we can iterate through the variants{%- endcomment -%}
+                            {%- assign option_index = 'option' | append: forloop.index -%}
+
+                            {%- for variant in product.variants -%}
+                              {%- assign variant_option_value = variant[option_index] | downcase -%}
+
+                              {%- if variant_option_value == tag_group_value and variant.featured_media -%}
+                                {%- assign primary_media = variant.featured_media -%}
+                                {%- assign filtered_variant = variant -%}
+                                {%- break -%}
+                              {%- endif %}
+                            {%- endfor -%}
+
+                            {%- break -%}
+                          {%- endif -%}
+                        {%- endfor -%}
+
+                        {%- break -%}
+                      {%- endif -%}
+                    {%- endfor -%}
+                  {%- endif -%}
+
+                  <a href="{{ variant.url | default: product.url | within: collection }}" class="product-item__image-wrapper {% if show_secondary_media %}product-item__image-wrapper--with-secondary{% endif %}">
+                    {%- capture supported_sizes -%}{%- render 'image-size', sizes: '200,300,400,500,600,700,800', image: primary_media.preview_image -%}{%- endcapture -%}
+                    {%- assign image_url = primary_media | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+
+                    <div class="aspect-ratio {% if settings.product_image_size != 'natural' %}aspect-ratio--{{ settings.product_image_size }}{% endif %}" style="padding-bottom: {{ 100.0 | divided_by: primary_media.preview_image.aspect_ratio }}%">
+                      <img class="product-item__primary-image lazyload image--fade-in" data-media-id="{{ primary_media.id }}" data-src="{{ image_url }}" data-sizes="auto" data-widths="[{{ supported_sizes }}]" alt="{{ primary_media.alt | escape }}">
+
+                      {%- if show_secondary_media -%}
+                        {%- capture supported_sizes -%}{%- render 'image-size', sizes: '200,300,400,500,600,700,800', image: product.media[1].preview_image -%}{%- endcapture -%}
+                        {%- assign image_url = product.media[1] | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+
+                        <img class="product-item__secondary-image lazyload image--fade-in" data-src="{{ image_url }}" data-sizes="auto" data-widths="[{{ supported_sizes }}]" alt="{{ product.media[1].alt | escape }}">
+                      {%- endif -%}
+
+                      <noscript>
+                        <img src="{{ primary_image | img_url: '600x' }}" alt="{{ primary_media.alt | escape }}">
+                      </noscript>
+                    </div>
+                  </a>
+                {%- endif -%}
+              {%- endcapture -%}
+              {
+                id: '{{ product.id }}',
+                title: '{{ product.title }}',
+                handle: '{{ product.handle }}',
+                url: '{{ variant.url | default: product.url | within: collection }}',
+                images: `{{ product_images }}`,
+                {% comment %} {% if product.variants.first.option1 %}
+                  firstVariantColor: '{{ product.variants.first.option1 }}',
+                {% else %}
+                  firstVariantColor: '',
+                {% endif %} {% endcomment %}
+                {% if product.variants.first.image %}
+                  featImgUrl: "{{ product.variants.first.image.src | img_url: 'master' }}",
+                {% else %}
+                  featImgUrl: "{{ product.featured_image.src | img_url: 'master' }}",
+                {% endif %}
+                {% if product.images[1] %}
+                  featImgUrl2: "{{ product.images[1] | img_url: 'master' }}",
+                {% endif %}
+                priceHtmlVar: `{{ price_list }}`,
+                {% if color %}
+                  firstVariantColor: '{{ color | strip }}',
+                {% else %}
+                  firstVariantColor: "",
+                {% endif %}
+              },
+              {% capture tempList %}
+                {{colorlist | append: color | append: " " }}
+              {% endcapture %}
+              {% assign colorlist = tempList %}
+            {%- endunless -%}
+          {%- endfor -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endfor -%}
+    ];
+    
+    const productsTotal = collectionArray.length;
+
+    function mapOrder(array, order, key) {
+      let returnArray = array;
+      returnArray.sort( function (a, b) {
+        var A = a[key], B = b[key];
+        if (order.indexOf(A) > order.indexOf(B)) {
+          return 1;
+        } else {
+          return -1;
+        }
+        return 1;
+      });
+      return returnArray;
+    };
+
+    function compareByPrice(a, b) {
+      if ( a.price < b.price ) {
+        return -1;
+      }
+      if ( a.price > b.price ) {
+        return 1;
+      }
+      return 0;
+    }
+
+    function renderProducts(el, arr, imgTile, page, perPage, total) {
+      var productsDOM = '';
+      if (arr) {
+        productsDOM += imgTile;
+        let offsetRight = ((page + 1 * perPage) < total) ? (page + 1 * perPage) : total;
+        let pageArr = arr.slice((page * perPage), offsetRight);
+        pageArr.map((el, i) => {
+          productsDOM += `<div class="${grid_classes}" data-def-color="${el.firstVariantColor}">
+            <div class="product-link" id="product-${el.id}">
+              ${el.images ? el.images : ''}
+              <div class="product-item__info">
+                <div class="product-item__info-inner">
+                  <a href="${el.url}" class="product-item__title text--strong link">${el.title}</a>
+                  ${el.priceHtmlVar ? el.priceHtmlVar : ''}
+                </div>
+              </div>
+            </div>
+          </div>`;
+        });
+      } else {
+        productsDOM += 'No products in this collection';
+      }
+      el.length > 0 && el.html(productsDOM); 
+    }
+
+    $(document).ready(function() {
+      var sortBtn = $('.sortBtn');
+      var pagerLink = $('.pagerLink');
+      var gridImage = $('#productsGridImage').html();
+      let sortedArr = [...collectionArray].sort(compareByPrice);
+      {% comment %} renderProducts($('.productsGrid'), sortedArr, gridImage, 0, {{ items_per_page }}, productsTotal); {% endcomment %}
+      $(document).on('click', '.sortByColor', function(e) {
+        window.history.replaceState(null, null, window.location.pathname);
+        $(this).siblings('.is-selected').removeClass('is-selected');
+        $(this).addClass('is-selected');
+        renderProducts($('.productsGrid'), mapOrder([...collectionArray], colorSortArray, 'firstVariantColor'), gridImage, 0, {{ items_per_page }}, productsTotal);
+        $('.sortByLabel').html('Sort by: Color');
+      });
+      sortBtn.click(function() {
+        var mode = $(this).data('mode');
+        sortBtn.removeClass('active');
+        $(this).addClass('active');
+        switch (mode) {
+          case 'default':
+            renderProducts($('.productsGrid'), collectionArray, gridImage, 0, {{ items_per_page }}, productsTotal);
+            break;
+          case 'color':
+            renderProducts($('.productsGrid'), mapOrder([...collectionArray], colorSortArray, 'firstVariantColor'), gridImage, 0, {{ items_per_page }}, productsTotal);
+            break;
+          case 'price':
+            let sortedArr = [...collectionArray].sort(compareByPrice);
+            renderProducts($('.productsGrid'), sortedArr, gridImage, 0, {{ items_per_page }}, productsTotal);
+            break;
+        }
+      });
+      pagerLink.not('.active').click(function() {
+        var mode = $('.sortBtn.active').data('mode');
+        var page = $(this).data('page');
+        pagerLink.removeClass('active');
+        $(this).addClass('active');
+        switch (mode) {
+          case 'default':
+            renderProducts($('.productsGrid'), collectionArray, gridImage, page, {{ items_per_page }}, productsTotal);
+            break;
+          case 'color':
+            renderProducts($('.productsGrid'), mapOrder([...collectionArray], colorSortArray, 'firstVariantColor'), gridImage, page, {{ items_per_page }}, productsTotal);
+            break;
+          case 'price':
+            let sortedArr = [...collectionArray].sort(compareByPrice);
+            renderProducts($('.productsGrid'), sortedArr, gridImage, page, {{ items_per_page }}, productsTotal);
+            break;
+        }
+      });
+    });
+  </script>
+{%- endif -%}
+{%- endpaginate -%}
+
+{% schema %}
+  {
+    "name": "Collection page",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_collection_image",
+        "label": "Show collection image",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "collapse_collection_description",
+        "label": "Collapse long description",
+        "default": false
+      },
+      {
+        "type": "select",
+        "id": "collection_image_size",
+        "label": "Collection image size",
+        "options": [
+          {
+            "value": "preserve_ratio",
+            "label": "Original image ratio"
+          },
+          {
+            "value": "small",
+            "label": "Small"
+          },
+          {
+            "value": "medium",
+            "label": "Medium"
+          },
+          {
+            "value": "large",
+            "label": "Large"
+          }
+        ],
+        "default": "small"
+      },
+      {
+        "type": "select",
+        "id": "products_per_row",
+        "label": "Products per row (desktop)",
+        "options": [
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          }
+        ],
+        "default": "4"
+      },
+      {
+        "type": "select",
+        "id": "default_view_layout",
+        "label": "Default view layout",
+        "options": [
+          {
+            "value": "grid",
+            "label": "Grid"
+          },
+          {
+            "value": "list",
+            "label": "List"
+          }
+        ],
+        "default": "grid"
+      },
+      {
+        "type": "select",
+        "id": "show_quick_buy",
+        "label": "Show quick buy on...",
+        "options": [
+          {
+            "value": "list",
+            "label": "List view"
+          },
+          {
+            "value": "list_grid",
+            "label": "List and grid views"
+          }
+        ],
+        "default": "list"
+      },
+      {
+        "type": "select",
+        "id": "show_quick_view",
+        "label": "Show quick view on...",
+        "options": [
+          {
+            "value": "list",
+            "label": "List view"
+          },
+          {
+            "value": "list_grid",
+            "label": "List and grid views"
+          }
+        ],
+        "default": "list"
+      },
+      {
+        "type": "header",
+        "content": "Announcement tile"
+      },
+      {
+        "type":      "color",
+        "id":        "announcement_tile_color",
+        "label":     "Background color",
+        "default":   "#766E7C"
+      },
+      {
+        "type":      "text",
+        "id":        "announcement_tile_title",
+        "label":     "Title",
+        "default":   "$200 OFF"
+      },
+      {
+        "type":      "richtext",
+        "id":        "announcement_tile_text",
+        "label":     "Text",
+        "default":   "<p>Save on all Resident exclusive brands with code RES2456 at checkout<br>Exclusive offer, expires on xx/xx.</p>"
+      }
+    ]
+  }
+{% endschema %}
+
+
+{% comment %} {
+  "type": "range",
+  "id": "default_products_per_page",
+  "label": "Default products per page",
+  "min": 24,
+  "max": 48,
+  "step": 12,
+  "default": 24
+}, {% endcomment %}

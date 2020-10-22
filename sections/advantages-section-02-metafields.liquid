@@ -1,0 +1,130 @@
+{% if section.settings.show_section %}
+  {% assign sec_meta = product.metafields.advntgs %}
+  <section class="section">
+    <div class="advntgs-02-01 flex-row">
+      {%- if sec_meta.image_1 != blank -%}
+        <div class="advntgs-02-01--img">
+          <img class="w-100" src="{{ sec_meta.image_1 }}" alt="{{ sec_meta.title_1 | strip_html }}">
+        </div>
+      {%- endif -%}
+      {%- if sec_meta.title_1 != blank or sec_meta.text_1 != blank -%}
+        <div class="advntgs-02-01--content" style="background-color: {{ sec_meta.bg_color_1 }}">
+          <div class="w-100">
+            {%- if sec_meta.title_1 != blank -%}
+              <h2 class="h0 advntgs-02-01--content-ttl">
+                {{ sec_meta.title_1 }}
+              </h2>
+            {%- endif -%}
+            {%- if sec_meta.text_1 != blank -%}
+              <div class="rte txt-body-1">
+                {{ sec_meta.text_1 }}
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="advntgs-02-02 flex-row">
+        {%- if sec_meta.image_reviews != blank -%}
+          <div class="advntgs-02-02--img">
+            <img class="w-100" src="{{ sec_meta.image_reviews }}" alt="{{ sec_meta.title_reviews | strip_html }}">
+          </div>
+        {%- endif -%}
+        {%- if sec_meta.title_reviews != blank or sec_meta.text_reviews != blank -%}
+          <div class="advntgs-02-02--content">
+            <div class="advntgs-02-02--content-panel">
+              {%- if sec_meta.title_reviews != blank -%}
+                <h2 class="h1 advntgs-02-02--content-ttl">
+                  {{ sec_meta.title_reviews }}
+                </h2>
+              {%- endif -%}
+              <svg class="star-rating advntgs-02-02--content-stars" viewBox="0 0 170 30">
+                <rect class="bg-rect" x="0" y="0" width="100%" height="100%" clip-path="url(#star-empty)"></rect>
+                <rect class="rating-rect" x="0" y="0" width="100%" height="100%" clip-path="url(#star)"></rect>
+              </svg>
+              {%- if sec_meta.text_reviews != blank -%}
+                <div class="rte txt-body-1">
+                  {{ sec_meta.text_reviews }}
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+
+  <section class="section advntgs-02-03--sec">
+    <div class="container">
+      <div class="advntgs-02-03 flex-row">      
+        {%- if sec_meta.image_2 != blank -%}
+          <div class="advntgs-02-03--img">
+            <img class="w-100" src="{{ sec_meta.image_2 }}" alt="{{ sec_meta.title_2 | strip_html }}">
+          </div>
+        {%- endif -%}
+
+        <div class="advntgs-02-03--content">
+          {%- if sec_meta.title_2 != blank -%}
+            <h2 class="h1">
+              {{ sec_meta.title_2 }}
+            </h2>
+          {%- endif -%}
+          {%- if sec_meta.text_2 != blank -%}
+            <div class="rte txt-body-1">
+              {{ sec_meta.text_2 }}
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section advntgs-02-04--sec">
+    <div class="container">
+      <div class="w-100 position-relative">
+      </div>
+      <div class="advntgs-02-04 flex-row">      
+        {%- if sec_meta.image_3 != blank -%}
+          <div class="advntgs-02-04--img">  
+            <div class="advntgs-02-04--figures">
+              <div class="advntgs-02-04--figures-door-1 door-bottom--bottom-right"></div>
+              <div class="advntgs-02-04--figures-door-2 door-bottom--top-right"></div>
+            </div>
+            <img class="w-100" src="{{ sec_meta.image_3 }}" alt="{{ sec_meta.title_3 | strip_html }}">
+          </div>
+        {%- endif -%}
+
+        <div class="advntgs-02-04--content">
+          {%- if sec_meta.title_3 != blank -%}
+            <h2 class="h1">
+              {{ sec_meta.title_3 }}
+            </h2>
+          {%- endif -%}
+          {%- if sec_meta.text_3 != blank -%}
+            <div class="rte txt-body-1">
+              {{ sec_meta.text_3 }}
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product advantages (meta)",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_section",
+      "label": "Show section",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,56 @@
+{%- if customer and customer.tags contains 'RESIDENT_PREFERRED' -%}
+  {%- if product.metafields.pdp.price_preferred != blank and product.metafields.pdp.price_label != blank -%}
+    {%- assign selected_variant = product.selected_or_first_available_variant -%}
+    {%- capture preferred_price -%}
+      {%- assign custom_price = '' -%}
+      {%- if product.metafields.pdp.price_type == '$' -%}
+        {%- assign custom_price = product.price | divided_by: 100 | minus: product.metafields.pdp.price_preferred -%}
+        {{ custom_price | times: 100 | money_without_trailing_zeros }}
+      {%- elsif product.metafields.pdp.price_type == '%' -%}
+        {%- assign custom_price_percent = 100 | minus: product.metafields.pdp.price_preferred | divided_by: 100.00 -%}
+        {%- assign custom_price = product.price | times: custom_price_percent -%}
+        {{ custom_price | money_without_trailing_zeros }}
+      {%- endif -%}
+    {%- endcapture -%}
+
+    {%- capture preferred_price_caption -%}
+      {%- assign custom_price_caption = '' -%}
+      {%- if product.metafields.pdp.price_type == '$' -%}
+        {{ product.metafields.pdp.price_preferred | times: 100 | money_without_trailing_zeros }}
+      {%- elsif product.metafields.pdp.price_type == '%' -%}
+        {{ product.metafields.pdp.price_preferred }}% 
+      {%- endif -%}
+    {%- endcapture -%}
+    
+    <div class="w-100">
+      <div class="product-form__price-preferred">
+        <div class="pdp--customer-tag tag-preferred">
+          {{ product.metafields.pdp.price_label }}&nbsp;
+          {% if product.price_varies %}
+            {% for variant in product.variants %}
+              {% capture preferred_price %}
+                {%- assign custom_price = '' -%}
+                {%- if product.metafields.pdp.price_type == '$' -%}
+                  {%- assign custom_price = variant.price | divided_by: 100 | minus: product.metafields.pdp.price_preferred -%}
+                  {{ custom_price | times: 100 | money_without_trailing_zeros }}
+                {%- elsif product.metafields.pdp.price_type == '%' -%}
+                  {%- assign custom_price_percent = 100 | minus: product.metafields.pdp.price_preferred | divided_by: 100.00 -%}
+                  {%- assign custom_price = variant.price | times: custom_price_percent -%}
+                  {{ custom_price | money_without_trailing_zeros }}
+                {%- endif -%}
+              {% endcapture %}
+              <div class="dynamicPrefPrice{% if variant != selected_variant %} d-none{% endif %}" data-variant-id="{{ variant.id }}">
+                {{ preferred_price }}
+              </div>
+            {% endfor %}
+          {% else %}
+            {{ preferred_price }}
+          {% endif %}
+        </div>
+        <div class="product-form__price-preferred-caption">
+          {{ preferred_price_caption }} discount applied at checkout
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+{%- endif -%}

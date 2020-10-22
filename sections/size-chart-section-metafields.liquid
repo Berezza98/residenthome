@@ -1,0 +1,30 @@
+{% if section.settings.show_section %}
+  {% assign sec_meta = product.metafields.sizechart %}
+  <section class="section">
+    {%- if sec_meta.size_chart_image != blank -%}
+      <img class="w-100" src="{{ sec_meta.size_chart_image }}" alt="Size chart">
+    {%- endif -%}
+    {%- if sec_meta.size_chart_content != blank -%}
+      <div class="container container--narrow">
+        <div class="sizechart-table01">
+          <h3 class="sizechart-table01--ttl h4 fw-600">Size quide</h3>
+          {{ sec_meta.size_chart_content }}
+        </div>
+      </div>
+    {%- endif -%}
+  </section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product size chart (meta)",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_section",
+      "label": "Show section",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,96 @@
+{%- if section.settings.show_section -%}
+  <section class="sec--footer-icons" data-section-id="{{ section.id }}" data-section-type="text-with-icons">
+    <div class="container">
+      <div class="icon-blocks">
+        {%- for block in section.blocks -%}
+          <div class="icon-block{% if block.settings.mobile_full_width %} mob-full-width{% endif %}">
+            <div class="icon-block--spacer">
+              <div class="icon-block--icon">
+                {%- if block.settings.custom_icon != blank -%}
+                  <img src="{{ block.settings.custom_icon | img_url: '45x' }}" alt="{{ block.settings.custom_icon.alt | escape }}">
+                {%- endif -%}
+              </div>
+
+              {%- if block.settings.title != blank or block.settings.content != blank -%}
+                {%- if block.settings.title != blank -%}
+                  <p class="icon-block--title text--strong">{{ block.settings.title | escape }}</p>
+                {%- endif -%}
+
+                {%- if block.settings.content != blank -%}
+                  <div class="icon-block--content rte">
+                    {{ block.settings.content  }}
+                  </div>
+                {%- endif -%}
+
+                {%- if block.settings.link != blank and block.settings.button_text != blank -%}
+                  <a href="{{ block.settings.link }}" class="button button--plain mod-arrow mod-arrow-white">{{ block.settings.button_text | escape }}</a>
+                {%- endif -%}
+              {%- endif -%}
+            </div>
+            {%- if block.settings.mobile_full_width -%}
+              <hr class="icon-block--line mob-only">
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+      <hr class="icon-block--line">
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Text with icons 1",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_section",
+      "label": "Show section",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "mobile_full_width",
+          "label": "Full width on mobile",
+          "default": true
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_icon",
+          "label": "Icon",
+          "info": "45px x .png with transparency recommended"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Your title"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content",
+          "default": "<p>Short content about your store</p>"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Link text"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link URL"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
